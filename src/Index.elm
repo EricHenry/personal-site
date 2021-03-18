@@ -1,9 +1,7 @@
 module Index exposing (view)
 
-import Data.Author
 import Date
 import Element exposing (Element)
-import Element.Border
 import Element.Font
 import Metadata exposing (Metadata)
 import Pages
@@ -65,65 +63,20 @@ title : String -> Element msg
 title text =
     [ Element.text text ]
         |> Element.paragraph
-            [ Element.Font.size 36
-            , Element.Font.center
-            , Element.Font.family [ Element.Font.typeface "Raleway" ]
-            , Element.Font.semiBold
+            [ Element.Font.size 16
+            , Element.Font.underline
+            , Element.Font.color (Element.rgb255 201 202 204)
             , Element.padding 16
             ]
 
 
 articleIndex : Metadata.ArticleMetadata -> Element msg
 articleIndex metadata =
-    Element.el
-        [ Element.centerX
-        , Element.width (Element.maximum 800 Element.fill)
-        , Element.padding 40
-        , Element.spacing 10
-        , Element.Border.width 1
-        , Element.Border.color (Element.rgba255 0 0 0 0.1)
-        , Element.mouseOver
-            [ Element.Border.color (Element.rgba255 0 0 0 1)
+    Element.row [ Element.alignLeft ]
+        [ Element.el
+            [ Element.Font.color (Element.rgb255 102 102 102)
+            , Element.Font.size 14
             ]
-        ]
-        (postPreview metadata)
-
-
-readMoreLink : Element msg
-readMoreLink =
-    Element.text "Continue reading >>"
-        |> Element.el
-            [ Element.centerX
-            , Element.Font.size 18
-            , Element.alpha 0.6
-            , Element.mouseOver [ Element.alpha 1 ]
-            , Element.Font.underline
-            , Element.Font.center
-            ]
-
-
-postPreview : Metadata.ArticleMetadata -> Element msg
-postPreview post =
-    Element.textColumn
-        [ Element.centerX
-        , Element.width Element.fill
-        , Element.spacing 30
-        , Element.Font.size 18
-        ]
-        [ title post.title
-        , Element.row [ Element.spacing 10, Element.centerX ]
-            [ Data.Author.view [ Element.width (Element.px 40) ] post.author
-            , Element.text post.author.name
-            , Element.text "•"
-            , Element.text (post.published |> Date.format "MMMM ddd, yyyy")
-            ]
-        , post.description
-            |> Element.text
-            |> List.singleton
-            |> Element.paragraph
-                [ Element.Font.size 22
-                , Element.Font.center
-                , Element.Font.family [ Element.Font.typeface "Raleway" ]
-                ]
-        , readMoreLink
+            (Element.text (metadata.published |> Date.format "yyyy-dd-MM"))
+        , title metadata.title
         ]

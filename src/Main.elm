@@ -78,7 +78,8 @@ generateFiles :
     ->
         StaticHttp.Request
             (List
-                (Result String
+                (Result
+                    String
                     { path : List String
                     , content : String
                     }
@@ -130,7 +131,10 @@ update msg model =
             ( model, Cmd.none )
 
 
+
 --subscriptions : Model -> Sub Msg
+
+
 subscriptions _ _ _ =
     Sub.none
 
@@ -187,9 +191,9 @@ pageView model siteMetadata page viewForPage =
             }
 
         Metadata.BlogIndex ->
-            { title = "elm-pages blog"
+            { title = "eh."
             , body =
-                [ Element.column [ Element.padding 20, Element.centerX ] [ Index.view siteMetadata ]
+                [ Element.column [ Element.alignLeft ] [ Index.view siteMetadata ]
                 ]
             }
 

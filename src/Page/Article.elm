@@ -14,32 +14,38 @@ view : ArticleMetadata -> Element msg -> { title : String, body : List (Element 
 view metadata viewForPage =
     { title = metadata.title
     , body =
-        [ Element.column [ Element.spacing 10 ]
-            [ Element.row [ Element.spacing 10 ]
-                [ Author.view [] metadata.author
-                , Element.column [ Element.spacing 10, Element.width Element.fill ]
-                    [ Element.paragraph [ Font.bold, Font.size 24 ]
-                        [ Element.text metadata.author.name
-                        ]
-                    , Element.paragraph [ Font.size 16 ]
-                        [ Element.text metadata.author.bio ]
-                    ]
-                ]
+        [ Element.column []
+            [ Palette.blogHeading metadata.title
+            , publishedDateView metadata |> Element.el [ Element.paddingXY 0 5, Font.size 13, Font.color (Element.rgb255 201 202 204) ]
             ]
-        , publishedDateView metadata |> Element.el [ Font.size 16, Font.color (Element.rgba255 0 0 0 0.6) ]
-        , Palette.blogHeading metadata.title
-        , articleImageView metadata.image
-        , viewForPage
+        , Element.el [ Font.size 16 ] viewForPage
+
+        --, authorSnippet metadata.author
         ]
     }
 
 
+authorSnippet : Author.Author -> Element msg
+authorSnippet author =
+    Element.column [ Element.alignBottom, Element.spacing 10 ]
+        [ Element.row [ Element.spacing 10 ]
+            [ Author.view [] author
+            , Element.column [ Element.spacing 10, Element.width Element.fill ]
+                [ Element.paragraph [ Font.bold, Font.size 24 ]
+                    [ Element.text author.name
+                    ]
+                , Element.paragraph [ Font.size 16 ]
+                    [ Element.text author.bio ]
+                ]
+            ]
+        ]
+
+
 publishedDateView : { a | published : Date } -> Element msg
 publishedDateView metadata =
-    Element.text
-        (metadata.published
-            |> Date.format "MMMM ddd, yyyy"
-        )
+    metadata.published
+        |> Date.format "yyyy-dd-MM"
+        |> Element.text
 
 
 articleImageView : ImagePath Pages.PathKey -> Element msg

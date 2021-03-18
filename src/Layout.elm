@@ -1,7 +1,7 @@
 module Layout exposing (view)
 
 import DocumentSvg
-import Element exposing (Element)
+import Element exposing (Element, rgb255)
 import Element.Background
 import Element.Border
 import Element.Font as Font
@@ -26,21 +26,27 @@ view document page =
     { title = document.title
     , body =
         Element.column
-            [ Element.width Element.fill ]
+            [ Element.Background.color (rgb255 28 32 34)
+            , Font.color (rgb255 201 202 204)
+            , Element.width Element.fill
+            , Element.height Element.fill
+            ]
             [ header page.path
             , Element.column
                 [ Element.padding 30
                 , Element.spacing 40
                 , Element.Region.mainContent
                 , Element.width (Element.fill |> Element.maximum 800)
+                , Element.height Element.fill
                 , Element.centerX
                 ]
                 document.body
+            , footer
             ]
             |> Element.layout
                 [ Element.width Element.fill
                 , Font.size 20
-                , Font.family [ Font.typeface "Roboto" ]
+                , Font.family [ Font.typeface "Menlo" ]
                 , Font.color (Element.rgba255 0 0 0 0.8)
                 ]
     }
@@ -49,38 +55,54 @@ view document page =
 header : PagePath Pages.PathKey -> Element msg
 header currentPath =
     Element.column [ Element.width Element.fill ]
-        [ Element.el
-            [ Element.height (Element.px 4)
-            , Element.width Element.fill
-            , Element.Background.gradient
-                { angle = 0.2
-                , steps =
-                    [ Element.rgb255 0 242 96
-                    , Element.rgb255 5 117 230
-                    ]
-                }
-            ]
-            Element.none
-        , Element.row
-            [ Element.paddingXY 25 4
-            , Element.spaceEvenly
-            , Element.width Element.fill
+        [ Element.row
+            [ Element.width Element.fill
             , Element.Region.navigation
-            , Element.Border.widthEach { bottom = 1, left = 0, right = 0, top = 0 }
-            , Element.Border.color (Element.rgba255 40 80 40 0.4)
+            , Element.Border.widthEach { bottom = 0, left = 0, right = 0, top = 1 }
+            , Element.Border.color (Element.rgb255 201 202 204)
             ]
-            [ Element.link []
-                { url = "/"
-                , label =
-                    Element.row [ Font.size 30, Element.spacing 16 ]
-                        [ DocumentSvg.view
-                        , Element.text "elm-pages-starter"
-                        ]
-                }
-            , Element.row [ Element.spacing 15 ]
-                [ elmDocsLink
-                , githubRepoLink
-                , highlightableLink currentPath Pages.pages.blog.directory "Blog"
+            [ Element.row
+                [ Element.paddingXY 25 25
+                , Element.centerX
+                , Element.spaceEvenly
+                , Element.width (Element.maximum 800 Element.fill)
+                ]
+                [ Element.link []
+                    { url = "/"
+                    , label =
+                        Element.row [ Font.size 28, Element.spacing 16 ] [ Element.text "eh." ]
+                    }
+                , Element.row [ Element.spacing 15 ]
+                    [ githubRepoLink
+                    , linkedInLink
+                    ]
+                ]
+            ]
+        ]
+
+
+footer : Element msg
+footer =
+    Element.column [ Element.width Element.fill ]
+        [ Element.row
+            [ Element.width Element.fill
+            , Element.Region.footer
+            ]
+            [ Element.row
+                [ Element.paddingXY 25 15
+                , Font.size 12
+                , Element.centerX
+                , Element.spacing 10
+                , Element.width (Element.maximum 800 Element.fill)
+                , Font.color (rgb255 102 102 102)
+                ]
+                [ Element.el [] (Element.text "copyright © 2021 eric henry")
+                , Element.row
+                    [ Element.alignRight
+                    ]
+                    [ Element.text "written in: "
+                    , elmLink
+                    ]
                 ]
             ]
         ]
@@ -113,24 +135,37 @@ highlightableLink currentPath linkDirectory displayName =
 githubRepoLink : Element msg
 githubRepoLink =
     Element.newTabLink []
-        { url = "https://github.com/dillonkearns/elm-pages"
+        { url = "https://github.com/erichenry"
         , label =
             Element.image
-                [ Element.width (Element.px 22)
+                [ Element.width (Element.px 28)
                 , Font.color Palette.color.primary
                 ]
-                { src = ImagePath.toString Pages.images.github, description = "Github repo" }
+                { src = ImagePath.toString Pages.images.octocat, description = "Github Profile" }
         }
 
 
-elmDocsLink : Element msg
-elmDocsLink =
+linkedInLink : Element msg
+linkedInLink =
     Element.newTabLink []
-        { url = "https://package.elm-lang.org/packages/dillonkearns/elm-pages/latest/"
+        { url = "https://www.linkedin.com/in/eric-henry-correia/"
         , label =
             Element.image
-                [ Element.width (Element.px 22)
+                [ Element.width (Element.px 28)
                 , Font.color Palette.color.primary
                 ]
-                { src = ImagePath.toString Pages.images.elmLogo, description = "Elm Package Docs" }
+                { src = ImagePath.toString Pages.images.linkedin, description = "LinkedIn Profile" }
+        }
+
+
+elmLink : Element msg
+elmLink =
+    Element.newTabLink []
+        { url = "https://elm-lang.org/"
+        , label =
+            Element.image
+                [ Element.width (Element.px 18)
+                , Font.color Palette.color.primary
+                ]
+                { src = ImagePath.toString Pages.images.elmLogo, description = "Elm logo" }
         }

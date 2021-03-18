@@ -1,4 +1,4 @@
 ---
-title: elm-pages blog
+title: eh blog
 type: blog-index
 ---
